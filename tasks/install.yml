@@ -1,0 +1,22 @@
+---
+- name: Copy over webhook library
+  file:
+    path: '{{ github_webhook_script_dir }}'
+    owner: '{{ github_webhook_service_user }}'
+    group: '{{ github_webhook_service_user }}'
+    state: 'directory'
+    mode: 0755
+
+- name: Copy over server script
+  copy:
+    src: '{{ item }}'
+    dest: '{{ github_webhook_script_dir }}'
+    owner: '{{ github_webhook_service_user }}'
+    group: '{{ github_webhook_service_user }}'
+    mode: 0750
+  with_fileglob:
+    - 'files/*.py'
+
+- name: Install Python dependencies
+  apt:
+    name: '{{ github_webhook_dependencies }}'

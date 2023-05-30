@@ -1,0 +1,21 @@
+[Unit]
+Description="{{ github_webhook_description }}"
+Documentation=https://github.com/status-im/infra-role-github-webhook/tree/master/README.md
+Requires=network-online.target
+After=network-online.target
+After=docker.service
+
+[Service]
+User={{ github_webhook_service_user }}
+ExecStart={{ github_webhook_script_dir }}/server.py \
+    --repo-url={{ github_webhook_repo_url | mandatory }} \
+    --repo-branch={{ github_webhook_repo_branch | mandatory }} \
+    {{ github_webhook_dest_path | mandatory }}
+WorkingDirectory={{ github_webhook_script_dir }}
+RuntimeDirectory=github_webhook
+PermissionsStartOnly=True
+Restart=on-failure
+Environment=WEBHOOK_SECRET={{ github_webhook_secret | mandatory }}
+
+[Install]
+WantedBy=multi-user.target

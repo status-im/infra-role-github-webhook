@@ -1,0 +1,16 @@
+---
+- name: Create systemd Unit file
+  template:
+    src: 'webhook.service.j2'
+    dest: '/lib/systemd/system/{{ github_webhook_service_name }}.service'
+    mode: 0644
+
+- name: Reload Systemctl
+  command: systemctl daemon-reload
+
+- name: (Re)Start Service
+  service:
+    name: '{{ github_webhook_service_name }}.service'
+    state: restarted
+    enabled: true
+  throttle: 1

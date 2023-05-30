@@ -1,0 +1,30 @@
+---
+# REQUIRED : Directories names depend on it
+# github_webhook_service_user: 'github'
+github_webhook_service_name: '{{ github_webhook_service_user }}-webhook'
+github_webhook_description: 'GitHub Webhook server for {{ github_webhook_service_user }} repos'
+# Has to be the UID of Airflow user on the host.
+github_webhook_service_user_uid: 150000
+
+github_webhook_home: '/home/{{ github_webhook_service_user }}'
+github_webhook_venv_path: '{{ github_webhook_home }}/venv'
+github_webhook_script_dir: '{{ github_webhook_home }}/webhook'
+github_webhook_addr: 'localhost'
+github_webhook_port: 9090
+github_webhook_dependencies:
+  - 'python3-flask'
+  - 'python3-git'
+
+# REQUIRED: python files will be copied here
+#github_webhook_dest_path: ~
+
+# REQUIRED: authentication of github requests
+#github_webhook_secret: ~
+
+# REQUIRED: private SSH key for Git access
+#github_webhook_ssh_key: ~
+
+# REQUIRED: details of repo to keep updated
+#github_webhook_repo_url: ~
+#github_webhook_repo_branch: ~
+

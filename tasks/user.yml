@@ -1,0 +1,38 @@
+---
+- name: Create webhook group
+  group:
+    name: '{{ github_webhook_service_user }}'
+    gid: '{{ github_webhook_service_user_uid }}'
+
+- name: Create webhook user
+  user:
+    name: '{{ github_webhook_service_user }}'
+    group: '{{ github_webhook_service_user }}'
+    groups: ['www-data']
+    uid: '{{ github_webhook_service_user_uid }}'
+    create_home: true
+    comment: 'Airflow Webhook User'
+
+- name: Create SSH config directory
+  file:
+    path: '{{ github_webhook_home }}/.ssh'
+    owner: '{{ github_webhook_service_user }}'
+    group: '{{ github_webhook_service_user }}'
+    state: 'directory'
+    mode: 0750
+  when: github_webhook_ssh_key is defined
+
+- name: Create SSH private key
+  copy:
+    dest: '{{ github_webhook_home }}/.ssh/id_rsa'
+    content: '{{ github_webhook_ssh_key }}'
+    owner: '{{ github_webhook_service_user }}'
+    group: '{{ github_webhook_service_user }}'
+    mode: 0400
+  when: github_webhook_ssh_key is defined
+
+- name: Update give webhook user permission to directory
+  file:
+    path: '{{ github_webhook_dest_path }}' 
+    owner: '{{ github_webhook_service_user }}'
+    group: '{{ github_webhook_service_user }}'
