@@ -22,10 +22,12 @@
     mode: 0750
   when: github_webhook_ssh_key is defined
 
+# The field content need the literral block style ( `|` )  to keep the EOF at the end and ensure the validity of the key.
 - name: Create SSH private key
   copy:
     dest: '{{ github_webhook_home }}/.ssh/id_rsa'
-    content: '{{ github_webhook_ssh_key }}'
+    content: |
+     {{ github_webhook_ssh_key }}
     owner: '{{ github_webhook_service_user }}'
     group: '{{ github_webhook_service_user }}'
     mode: 0400
