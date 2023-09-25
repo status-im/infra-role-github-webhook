@@ -22,4 +22,4 @@ The `github_webhook_secret` is generated when configuring the webhook in the rep
 
 The public key associated to `github_webhook_ssh_key` has to be added as a Deploy key in the repository setting.
 
-The user `github_webhook_service_user` can be added to additional group by overriding the list `github_webhook_user_additional_group`.
+The user `github_webhook_service_user` can be added to additional group by overriding the list `github_webhook_user_additional_groups`.

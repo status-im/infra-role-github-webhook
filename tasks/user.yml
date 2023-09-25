@@ -6,10 +6,10 @@
 
 - name: Create webhook user
   user:
-    name: '{{ github_webhook_service_user }}'
-    group: '{{ github_webhook_service_user }}'
-    groups: '{{ github_webhook_user_addtional_group }}'
-    uid: '{{ github_webhook_service_user_uid }}'
+    name:   '{{ github_webhook_service_user }}'
+    group:  '{{ github_webhook_service_user }}'
+    groups: '{{ github_webhook_service_user_groups }}'
+    uid:    '{{ github_webhook_service_user_uid }}'
     create_home: true
     comment: 'Airflow Webhook User'
 
