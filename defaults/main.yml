@@ -1,6 +1,5 @@
 ---
-# REQUIRED : Directories names depend on it
-# github_webhook_service_user: 'github'
+github_webhook_service_user: 'github'
 github_webhook_service_name: '{{ github_webhook_service_user }}-webhook'
 github_webhook_description: 'GitHub Webhook server for {{ github_webhook_service_user }} repos'
 # Has to be the UID of Airflow user on the host.
