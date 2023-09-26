@@ -2,7 +2,6 @@
 github_webhook_service_user: 'github'
 github_webhook_service_user_groups: ['www-data']
 github_webhook_service_name: '{{ github_webhook_service_user }}-webhook'
-github_webhook_description: 'GitHub Webhook server for {{ github_webhook_service_user }} repos'
 # Has to be the UID of Airflow user on the host.
 github_webhook_service_user_uid: 150000
 
