@@ -2,7 +2,7 @@
 - name: Create webhook group
   group:
     name: '{{ github_webhook_service_user }}'
-    gid: '{{ github_webhook_service_user_uid }}'
+    gid:  '{{ github_webhook_service_user_uid }}'
 
 - name: Create webhook user
   user:
@@ -15,7 +15,7 @@
 
 - name: Create SSH config directory
   file:
-    path: '{{ github_webhook_home }}/.ssh'
+    path:  '{{ github_webhook_home }}/.ssh'
     owner: '{{ github_webhook_service_user }}'
     group: '{{ github_webhook_service_user }}'
     state: 'directory'
@@ -35,6 +35,6 @@
 
 - name: Update give webhook user permission to directory
   file:
-    path: '{{ github_webhook_dest_path }}' 
+    path:  '{{ github_webhook_dest_path }}'
     owner: '{{ github_webhook_service_user }}'
     group: '{{ github_webhook_service_user }}'

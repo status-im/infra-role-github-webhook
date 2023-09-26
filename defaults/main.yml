@@ -1,9 +1,8 @@
 ---
 github_webhook_service_user: 'github'
 github_webhook_service_user_groups: ['www-data']
+github_webhook_service_user_uid: 1500
 github_webhook_service_name: '{{ github_webhook_service_user }}-webhook'
-# Has to be the UID of Airflow user on the host.
-github_webhook_service_user_uid: 150000
 
 github_webhook_home: '/home/{{ github_webhook_service_user }}'
 github_webhook_venv_path: '{{ github_webhook_home }}/venv'
