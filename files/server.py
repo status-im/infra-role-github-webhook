@@ -5,6 +5,7 @@ import logging as log
 from flask import Flask
 from git import Repo, util
 from webhook import Webhook
+from subprocess import check_output
 from os import environ as env, path
 from urllib.parse import urlparse
 from argparse import ArgumentParser
@@ -36,7 +37,7 @@ class ManagedRepo:
         log.debug('Fetching from: %s', self.origin.url)
         self.origin.fetch()
         self.remote_ref = self.origin.refs[self.branch]
-    
+
     def _checkout(self):
 
         if self.repo.head.ref.name != self.branch:
@@ -86,17 +87,26 @@ class ManagedRepo:
 def remove_prefix(text, prefix):
     return text[text.startswith(prefix) and len(prefix):]
 
+def run_command(command):
+    log.info('Running command: %s' % command)
+    try:
+        output = check_output(command.split())
+    except subprocess.CalledProcessError as err:
+        log.error('Command failed, return code: %d' % err.returncode)
+        log.error('Command stdout:\n%s' % err.output)
+    else:
+        log.info('Command success:\n%s' % output)
 
-def define_push_hook(repo):
+def define_push_hook(repo, post_action):
     @webhook.hook()
-    def on_push(data):
+    def on_push(data, post_action):
         branch = remove_prefix(data['ref'], 'refs/heads/')
         name = data['repository']['full_name']
 
         if name != repo.name or branch != repo.branch:
             log.warning('Repo event does not match configred repo')
             return
-            
+
         new_commit = data['head_commit']['id']
         log.info('New commit available: %s', new_commit)
 
@@ -107,6 +117,8 @@ def define_push_hook(repo):
         else:
             log.info('Updated repo to: %s', after)
 
+        if post_action:
+            post_action()
 
 def parse_args():
     parser = ArgumentParser(
@@ -117,6 +129,7 @@ def parse_args():
     parser.add_argument('-l', '--log-level', help='Logging level', default='info')
     parser.add_argument('-P', '--port', default=9090, help='Server listen port.')
     parser.add_argument('-H', '--host', default='localhost', help='Server listen host.')
+    parser.add_argument('-p', '--post-command', help='Command to run after repo update.')
     parser.add_argument('-r', '--repo-url', help='Git repository URL.')
     parser.add_argument('-b', '--repo-branch', default='master',
                         help='Git repository branch.')
@@ -140,8 +153,12 @@ def main():
     # Initialize repository to manage
     repo = ManagedRepo(args.repo_url, args.repo_branch, args.path)
 
+    post_command = None
+    if args.post_command:
+        post_command = lambda: run_command(args.post_command)
+
     # Define handler for webhook requests.
-    define_push_hook(repo)
+    define_push_hook(repo, post_command)
 
     # Start the server.
     app.run(host=args.host, port=args.port)

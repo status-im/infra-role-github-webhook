@@ -13,6 +13,9 @@ github_webhook_dependencies:
   - 'python3-flask'
   - 'python3-git'
 
+# Optional command to run after repo update.
+#github_webhook_post_command: '/usr/local/bin/handle_repo_update.sh --verbose'
+
 # REQUIRED: python files will be copied here
 #github_webhook_dest_path: ~
 
