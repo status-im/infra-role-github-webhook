@@ -23,12 +23,12 @@ class ManagedRepo:
     def __init__(self, url, branch, dest_path):
         self.url = url
         self.branch = branch
-        self.dest_path = dest_path
+        self.path = dest_path
         self._init()
         self._checkout()
 
     def _init(self):
-        self.repo = Repo.init(self._path())
+        self.repo = Repo.init(self.path)
         self.repo.description = self.name
         if 'origin' in self.repo.remotes:
             self.origin = self.repo.remotes['origin']
@@ -51,9 +51,6 @@ class ManagedRepo:
 
         log.debug('Checking out: %s', self.branch)
         self.repo.head.ref.checkout()
-
-    def _path(self):
-        return path.join(self.dest_path, self.name)
 
     @property
     def name(self):
