@@ -55,7 +55,7 @@ class ManagedRepo:
     @property
     def name(self):
         if self.url.startswith('https://'):
-            name = urlparse(self.url).path
+            name = urlparse(self.url).path.strip('/')
         else:
             name = self.url.split(':').pop()
         if name.endswith('.git'):
@@ -100,8 +100,11 @@ def define_push_hook(repo, post_action):
         branch = remove_prefix(data['ref'], 'refs/heads/')
         name = data['repository']['full_name']
 
-        if name != repo.name or branch != repo.branch:
-            log.warning('Repo event does not match configred repo')
+        if name != repo.name:
+            log.error('Wrong repo: Event(%s) != Local(%s)', name, repo.name)
+            return
+        if branch != repo.branch:
+            log.error('Wrong branch: Event(%s) != Local(%s)', branch, repo.branch)
             return
 
         new_commit = data['head_commit']['id']
