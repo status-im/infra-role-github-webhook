@@ -4,22 +4,25 @@ This is a helper role that deploy a python server for github webhook
 
 # Configuration
 
-The following parameter have to be added
-
+Required configuration:
 ```yaml
-github_webhook_service_user:
-github_webhook_dest_path:
-github_webhook_secret:
-github_webhook_ssh_key:
-github_webhook_repo_url:
-github_webhook_repo_branch:
+github_webhook_dest_path: '/opt/repo'
+github_webhook_secret: 'super-secret-webhook-secret'
+github_webhook_repo_url: 'https://github.com/example-org/example-repo'
+github_webhook_repo_branch: 'master'
 ```
+Additionally these options can be useful:
+```yaml
+github_webhook_ssh_key: '-----BEGIN OPENSSH PRIVATE KEY-----\n...'
+github_webhook_service_user: 'repouser'
+github_webhook_user_additional_groups: ['docker']
+github_webhook_service_user_uid: 1500
+```
+Explanations:
 
-`github_webhook_dest_path` correspond to the base path where the repository will be cloned. The name of the repo owner and the repo name will be added to the path.
-
-
-The `github_webhook_secret` is generated when configuring the webhook in the repository.
-
-The public key associated to `github_webhook_ssh_key` has to be added as a Deploy key in the repository setting.
-
-The user `github_webhook_service_user` can be added to additional group by overriding the list `github_webhook_user_additional_groups`.
+* `github_webhook_dest_path` - Absolute path for repository location.
+* `github_webhook_secret` - Used to configure the webhook in GitHub repository.
+* `github_webhook_ssh_key` - Optional private SSH key to checkout private repositories.
+* `github_webhook_service_user` - Define user to own the repo and run the service.
+* `github_wehbook_service_user_groups` - Modify list of groups of service user.
+* `github_webhook_service_user_uid` - Change UID of service user to match repo user.
