@@ -96,7 +96,7 @@ def run_command(command):
 
 def define_push_hook(repo, post_action):
     @webhook.hook()
-    def on_push(data, post_action):
+    def on_push(data):
         branch = remove_prefix(data['ref'], 'refs/heads/')
         name = data['repository']['full_name']
 
@@ -114,7 +114,8 @@ def define_push_hook(repo, post_action):
         else:
             log.info('Updated repo to: %s', after)
 
-        if post_action:
+        if post_action is not None:
+            log.info('Running post action!')
             post_action()
 
 def parse_args():
