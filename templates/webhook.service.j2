@@ -12,7 +12,7 @@ ExecStart={{ github_webhook_script_dir }}/server.py \
     --repo-url={{ github_webhook_repo_url | mandatory }} \
     --repo-branch={{ github_webhook_repo_branch | mandatory }} \
 {% if github_webhook_post_command is defined %}
-    --post-command={{ github_webhook_post_command | mandatory }} \
+    --post-command='{{ github_webhook_post_command | mandatory }}' \
 {% endif %}
     {{ github_webhook_dest_path | mandatory }}
 WorkingDirectory={{ github_webhook_script_dir }}
