@@ -5,8 +5,10 @@
     consul_config_name: '{{ github_webhook_service_name }}'
     consul_services:
       - name: '{{ github_webhook_service_name }}'
-        tags: ['{{ github_webhook_service_user }}', 'github', 'webhook']
+        id:   '{{ github_webhook_service_name }}'
+        port: '{{ github_webhook_port }}'
         address: '{{ ansible_local.wireguard.vpn_ip }}'
+        tags: ['{{ github_webhook_service_user }}', 'github', 'webhook']
         checks:
           - id: '{{ github_webhook_service_name }}-health'
             name: ' {{ github_webhook_service_user }} GitHub Webhook check'
