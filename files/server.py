@@ -5,10 +5,10 @@ import logging as log
 from flask import Flask
 from git import Repo, util
 from webhook import Webhook
-from subprocess import check_output
 from os import environ as env, path
 from urllib.parse import urlparse
 from argparse import ArgumentParser
+from subprocess import check_output, CalledProcessError
 
 app = Flask(__name__)
 webhook = Webhook(app, endpoint='/gh_webhook')
@@ -85,14 +85,14 @@ def remove_prefix(text, prefix):
     return text[text.startswith(prefix) and len(prefix):]
 
 def run_command(command):
-    log.info('Running command: %s' % command)
+    log.info('Running command: %s', command)
     try:
         output = check_output(command.split())
-    except subprocess.CalledProcessError as err:
+    except CalledProcessError as err:
         log.error('Command failed, return code: %d' % err.returncode)
-        log.error('Command stdout:\n%s' % err.output)
+        log.error('Command stdout:\n%s', err.output)
     else:
-        log.info('Command success:\n%s' % output)
+        log.info('Command success:\n%s', output)
 
 def define_push_hook(repo, post_action):
     @webhook.hook()
