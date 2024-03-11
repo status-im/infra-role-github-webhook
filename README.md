@@ -9,8 +9,10 @@ Required configuration:
 github_webhook_dest_path: '/opt/repo'
 github_webhook_secret: 'super-secret-webhook-secret'
 github_webhook_repo_url: 'https://github.com/example-org/example-repo'
-github_webhook_repo_branch: 'master'
+github_webhook_repo_version: 'master'
 ```
+If `version` is a commit no updates will be performed.
+
 Additionally these options can be useful:
 ```yaml
 github_webhook_ssh_key: '-----BEGIN OPENSSH PRIVATE KEY-----\n...'

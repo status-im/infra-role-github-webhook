@@ -20,9 +20,9 @@ def hello_world():
 
 class ManagedRepo:
 
-    def __init__(self, url, branch, dest_path):
+    def __init__(self, url, version, dest_path):
         self.url = url
-        self.branch = branch
+        self.version = version
         self.path = dest_path
         self._init()
         self._checkout()
@@ -30,27 +30,46 @@ class ManagedRepo:
     def _init(self):
         self.repo = Repo.init(self.path)
         self.repo.description = self.name
+
+        log.debug('Set origin: %s', self.url)
+        # Origin can already exist.
         if 'origin' in self.repo.remotes:
             self.origin = self.repo.remotes['origin']
         else:
             self.origin = self.repo.create_remote('origin', self.url)
         log.debug('Fetching from: %s', self.origin.url)
         self.origin.fetch()
-        self.remote_ref = self.origin.refs[self.branch]
+
+        # Version can also be a commit.
+        if self.version_as_commit():
+            log.warning('Version is a commit, no updates will be performed.')
+            self.remote_ref = str(self.version_as_commit())
+        else:
+            self.remote_ref = self.origin.refs[self.version]
 
     def _checkout(self):
-
-        if self.repo.head.ref.name != self.branch:
-            log.debug('Creating HEAD: %s', self.branch)
-            head = self.repo.create_head(self.branch, self.remote_ref)
+        # Branch can not exist yet.
+        if self.repo.head.ref.name != self.version:
+            log.debug('Creating HEAD: %s', self.version)
+            head = self.repo.create_head(self.version, self.remote_ref)
             self.repo.head.set_reference(head)
 
-        if self.repo.head.ref.tracking_branch() != self.remote_ref:
-            log.debug('Setting tracking branch: %s', self.remote_ref)
+        # New branch needs remote trakcing branch set.
+        if self.repo.head.is_detached:
+            log.warning('Unable to set tracking versionf for commit.')
+        elif self.repo.head.ref.tracking_branch() != self.remote_ref:
+            log.debug('Setting tracking version: %s', self.remote_ref)
             self.repo.head.ref.set_tracking_branch(self.remote_ref)
 
-        log.debug('Checking out: %s', self.branch)
-        self.repo.head.ref.checkout()
+        log.debug('Reseting repo to: %s(%s)', self.repo.head.ref, self.repo.head.commit)
+        self.repo.head.reset(index=True, working_tree=True)
+
+    def version_as_commit(self):
+        try:
+            self.repo.branch(self.version)
+        except AttributeError:
+            return self.repo.commit(self.version)
+        return None
 
     @property
     def name(self):
@@ -132,8 +151,8 @@ def parse_args():
     parser.add_argument('-H', '--host', default='localhost', help='Server listen host.')
     parser.add_argument('-p', '--post-command', help='Command to run after repo update.')
     parser.add_argument('-r', '--repo-url', help='Git repository URL.')
-    parser.add_argument('-b', '--repo-branch', default='master',
-                        help='Git repository branch.')
+    parser.add_argument('-v', '--repo-version', default='master',
+                        help='Git repository branch or commit.')
     parser.add_argument('-S', '--secret', default=env.get('WEBHOOK_SECRET'),
                         help='Webhook secret for authentication.')
     return parser.parse_args()
@@ -152,7 +171,7 @@ def main():
         webhook.secret = args.secret
 
     # Initialize repository to manage
-    repo = ManagedRepo(args.repo_url, args.repo_branch, args.path)
+    repo = ManagedRepo(args.repo_url, args.repo_version, args.path)
 
     post_command = None
     if args.post_command:
