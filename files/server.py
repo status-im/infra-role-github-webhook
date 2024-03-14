@@ -26,6 +26,7 @@ class ManagedRepo:
         self.path = dest_path
         self._init()
         self._checkout()
+        self.force_pull()
 
     def _init(self):
         self.repo = Repo.init(self.path)
@@ -73,10 +74,12 @@ class ManagedRepo:
         return self.repo.head.reset(commit=self.remote_ref, working_tree=True)
 
     def force_pull(self):
+        log.debug('Resetting repo from: %s', self.commit)
         commit_before = self.commit
         self.fetch()
         self.reset()
         commit_after = self.commit
+        log.debug('Reset repo to: %s', commit_after)
         return (commit_before, commit_after)
 
 
