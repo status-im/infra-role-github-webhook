@@ -8,6 +8,7 @@ After=docker.service
 [Service]
 User={{ github_webhook_service_user }}
 ExecStart={{ github_webhook_script_dir }}/server.py \
+    --log-level={{ github_webhook_log_level }} \
     --port={{ github_webhook_port }} \
     --repo-url={{ github_webhook_repo_url | mandatory }} \
     --repo-branch={{ github_webhook_repo_branch | mandatory }} \

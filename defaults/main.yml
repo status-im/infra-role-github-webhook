@@ -7,6 +7,7 @@ github_webhook_service_name: '{{ github_webhook_service_user }}-webhook'
 github_webhook_home: '/home/{{ github_webhook_service_user }}'
 github_webhook_venv_path: '{{ github_webhook_home }}/venv'
 github_webhook_script_dir: '{{ github_webhook_home }}/webhook'
+github_webhook_log_level: 'info'
 github_webhook_addr: 'localhost'
 github_webhook_port: 9090
 github_webhook_dependencies:
