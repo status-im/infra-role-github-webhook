@@ -33,6 +33,14 @@
     mode: 0400
   when: github_webhook_ssh_key is defined
 
+- name: Disable strict host key checking for GitHub
+  copy:
+    src:   'ssh_config'
+    dest:  '{{ github_webhook_home }}/.ssh/config'
+    owner: '{{ github_webhook_service_user }}'
+    group: '{{ github_webhook_service_user }}'
+    mode:  0640
+
 - name: Update give webhook user permission to directory
   file:
     path:  '{{ github_webhook_dest_path }}'
