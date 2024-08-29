@@ -4,13 +4,14 @@
   vars:
     consul_config_name: '{{ github_webhook_service_name }}'
     consul_services:
-      - name: '{{ github_webhook_service_name }}'
-        id:   '{{ github_webhook_service_name }}'
+      - id:   '{{ github_webhook_service_name }}'
+        name: '{{ github_webhook_service_name }}'
+        tags: '{{ github_webhook_consul_tags }}'
+        meta: '{{ github_webhook_consul_meta }}' 
         port: '{{ github_webhook_port }}'
-        address: '{{ ansible_local.wireguard.vpn_ip }}'
-        tags: ['{{ github_webhook_service_user }}', 'github', 'webhook']
+        address: '{{ ansible_local.wireguard.address }}'
         checks:
-          - id: '{{ github_webhook_service_name }}-health'
-            name: ' {{ github_webhook_service_user }} GitHub Webhook check'
+          - id:   '{{ github_webhook_service_name }}-health'
+            name: '{{ github_webhook_service_user }} GitHub Webhook check'
             type: 'http'
             http: 'http://localhost:{{ github_webhook_port }}/health'

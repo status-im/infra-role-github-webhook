@@ -29,3 +29,8 @@ github_webhook_dependencies:
 # REQUIRED: details of repo to keep updated
 #github_webhook_repo_url: ~
 #github_webhook_repo_branch: ~
+
+github_webhook_consul_tags_default: ['github', 'webhook']
+github_webhook_consul_tags_extra: []
+github_webhook_consul_tags: '{{ github_webhook_consul_tags_default + github_webhook_consul_tags_extra }}'
+github_webhook_consul_meta: {}
