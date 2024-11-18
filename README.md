@@ -10,6 +10,7 @@ github_webhook_dest_path: '/opt/repo'
 github_webhook_secret: 'super-secret-webhook-secret'
 github_webhook_repo_url: 'https://github.com/example-org/example-repo'
 github_webhook_repo_branch: 'master'
+github_webhook_post_command: 'echo "update repo"'
 ```
 Additionally these options can be useful:
 ```yaml
@@ -26,3 +27,4 @@ Explanations:
 * `github_webhook_service_user` - Define user to own the repo and run the service.
 * `github_wehbook_service_user_groups` - Modify list of groups of service user.
 * `github_webhook_service_user_uid` - Change UID of service user to match repo user.
+* `github_webhook_post_command` - Command to execute after webhook request is received.
