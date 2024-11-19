@@ -17,7 +17,7 @@ github_webhook_dependencies:
 # Optional command to run after repo update.
 #github_webhook_post_command: '/usr/local/bin/handle_repo_update.sh --verbose'
 
-# REQUIRED: python files will be copied here
+# REQUIRED: the code from github repo will be copied here
 #github_webhook_dest_path: ~
 
 # REQUIRED: authentication of github requests
