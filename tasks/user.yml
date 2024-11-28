@@ -3,6 +3,7 @@
   group:
     name: '{{ github_webhook_service_user }}'
     gid:  '{{ github_webhook_service_user_uid }}'
+  when: github_webhook_create_user_and_group
 
 - name: Create webhook user
   user:
@@ -11,7 +12,9 @@
     groups: '{{ github_webhook_service_user_groups }}'
     uid:    '{{ github_webhook_service_user_uid }}'
     create_home: true
-    comment: 'Airflow Webhook User'
+    comment: 'Webhook User'
+  when: github_webhook_create_user_and_group
+
 
 - name: Create SSH config directory
   file:

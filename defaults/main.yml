@@ -2,6 +2,8 @@
 github_webhook_service_user: 'github'
 github_webhook_service_user_groups: ['www-data']
 github_webhook_service_user_uid: 1500
+github_webhook_create_user_and_group: True
+
 github_webhook_service_name: '{{ github_webhook_service_user }}-webhook'
 
 github_webhook_home: '/home/{{ github_webhook_service_user }}'

@@ -12,6 +12,10 @@ github_webhook_repo_url: 'https://github.com/example-org/example-repo'
 github_webhook_repo_branch: 'master'
 github_webhook_post_command: 'echo "update repo"'
 ```
+The user and group creation can be deactivated:
+```yaml
+github_webhook_create_user_and_group: False
+```
 Additionally these options can be useful:
 ```yaml
 github_webhook_ssh_key: '-----BEGIN OPENSSH PRIVATE KEY-----\n...'
