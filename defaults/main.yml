@@ -15,6 +15,9 @@ github_webhook_port: 9090
 github_webhook_dependencies:
   - 'python3-flask'
   - 'python3-git'
+  - 'python3-aiohttp'
+  - 'python3-asgiref'
+github_webhook_instances: []
 
 # Optional command to run after repo update.
 #github_webhook_post_command: '/usr/local/bin/handle_repo_update.sh --verbose'

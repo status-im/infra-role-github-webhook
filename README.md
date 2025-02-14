@@ -22,6 +22,9 @@ github_webhook_ssh_key: '-----BEGIN OPENSSH PRIVATE KEY-----\n...'
 github_webhook_service_user: 'repouser'
 github_webhook_user_additional_groups: ['docker']
 github_webhook_service_user_uid: 1500
+github_webhook_instances:
+  - 'node-01.do-ams3.proxy.test'
+  - 'node-02.do-ams3.proxy.test'
 ```
 Explanations:
 
@@ -32,3 +35,4 @@ Explanations:
 * `github_wehbook_service_user_groups` - Modify list of groups of service user.
 * `github_webhook_service_user_uid` - Change UID of service user to match repo user.
 * `github_webhook_post_command` - Command to execute after webhook request is received.
+* `github_webhook_instances` - List of all webhook instances the webhook request should go to.

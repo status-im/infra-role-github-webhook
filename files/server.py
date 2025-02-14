@@ -10,13 +10,12 @@ from urllib.parse import urlparse
 from argparse import ArgumentParser
 from subprocess import check_output, CalledProcessError
 
-app = Flask(__name__)
+app = Flask("server")
 webhook = Webhook(app, endpoint='/gh_webhook')
 
 @app.route('/health')
 def hello_world():
     return 'OK'
-
 
 class ManagedRepo:
 
@@ -82,8 +81,6 @@ class ManagedRepo:
         log.debug('Reset repo to: %s', commit_after)
         return (commit_before, commit_after)
 
-
-
 def remove_prefix(text, prefix):
     return text[text.startswith(prefix) and len(prefix):]
 
@@ -124,6 +121,7 @@ def define_push_hook(repo, post_action):
             log.info('Running post action!')
             post_action()
 
+
 def parse_args():
     parser = ArgumentParser(
         description='GitHub Webhook server to pull repos.',
@@ -137,6 +135,8 @@ def parse_args():
     parser.add_argument('-r', '--repo-url', help='Git repository URL.')
     parser.add_argument('-b', '--repo-branch', default='master',
                         help='Git repository branch.')
+    parser.add_argument('-i', '--broadcast-instances', default=[], action='append',
+                        help='Other instances to broadcast webhook request to.')
     parser.add_argument('-S', '--secret', default=env.get('WEBHOOK_SECRET'),
                         help='Webhook secret for authentication.')
     return parser.parse_args()
@@ -153,6 +153,9 @@ def main():
 
     if args.secret:
         webhook.secret = args.secret
+
+    if args.broadcast_instances:
+        webhook.broadcast_instances = args.broadcast_instances
 
     # Initialize repository to manage
     repo = ManagedRepo(args.repo_url, args.repo_branch, args.path)
