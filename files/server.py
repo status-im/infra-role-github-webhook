@@ -52,6 +52,13 @@ class ManagedRepo:
         log.debug('Checking out: %s', self.branch)
         self.repo.head.ref.checkout()
 
+    def _update_submodules(self):
+        log.debug('Updating submodules...')
+        for submodule in self.repo.submodules:
+            log.debug('Updating submodule: %s', submodule.name)
+            submodule.update(init=True, recursive=True, force=True)
+        log.debug('Submodules updated: %d', len(self.repo.submodules))
+
     @property
     def name(self):
         if self.url.startswith('https://'):
@@ -77,6 +84,7 @@ class ManagedRepo:
         commit_before = self.commit
         self.fetch()
         self.reset()
+        self._update_submodules()
         commit_after = self.commit
         log.debug('Reset repo to: %s', commit_after)
         return (commit_before, commit_after)
