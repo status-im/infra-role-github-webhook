@@ -33,7 +33,9 @@
     owner: '{{ github_webhook_service_user }}'
     group: '{{ github_webhook_service_user }}'
     mode: 0400
-  when: github_webhook_ssh_key is defined
+  when:
+    - github_webhook_ssh_key is defined
+    - github_webhook_ssh_key != omit
 
 - name: Disable strict host key checking for GitHub
   copy:
